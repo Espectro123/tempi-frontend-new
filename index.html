@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Tempi - Temperature Experiment</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Link to the CSS file -->
+    <link rel="stylesheet" href="styles.css">
+    <!-- Include Chart.js library via CDN (Minified Version) -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+    <!-- Include Chart.js date adapter with date-fns bundled -->
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@2.0.0/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+    <!-- Include Chart.js Zoom Plugin -->
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@1.2.1/dist/chartjs-plugin-zoom.min.js"></script>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <h1>Tempi</h1>
+    </div>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Navigation Sidebar -->
+        <div class="nav-sidebar">
+            <ul>
+                <li><a href="#" id="nav-experiment" class="active">Experimento</a></li>
+                <li><a href="#" id="nav-sensors">Sensores</a></li>
+                <li><a href="#" id="nav-help">Ayuda</a></li>
+            </ul>
+        </div>
+
+        <!-- Content Area -->
+        <div class="content-area">
+            <!-- Experiment Section -->
+            <div id="experiment-section" class="content-section">
+                <!-- Experiment Container -->
+                <div class="experiment-container">
+                    <!-- Left Column -->
+                    <div class="experiment-left">
+                        <!-- Left Container for Fieldsets and Controls -->
+                        <div class="left-container">
+                            <!-- Experiment Parameters Form -->
+                            <form id="experiment-form">
+                                <fieldset>
+                                    <legend>Set Experiment Parameters</legend>
+                                    <!-- Input fields -->
+                                    <label for="initial-temp">Initial Water Temperature (ºC):</label>
+                                    <input type="number" id="initial-temp" name="initial-temp" min="0" max="35" required>
+
+                                    <label for="final-temp">Final Water Temperature (ºC):</label>
+                                    <input type="number" id="final-temp" name="final-temp" min="0" max="35" required>
+
+                                    <label for="cycle-duration">Cycle Duration (minutes):</label>
+                                    <input type="number" id="cycle-duration" name="cycle-duration" min="1" required>
+
+                                    <label for="offset">Offset (minutes):</label>
+                                    <input type="number" id="offset" name="offset" min="0" value="0" required>
+
+                                    <!-- New Predict Experiment Button -->
+                                    <button type="button" id="predict-experiment" class="btn btn-secondary">Predict Experiment</button>
+
+                                    <button type="button" id="start-experiment" class="btn btn-primary">Start Experiment</button>
+                                </fieldset>
+                            </form>
+
+                            <!-- Axis Range Adjustments -->
+                            <fieldset>
+                                <legend>Adjust Axis Ranges</legend>
+                                <!-- X-Axis Range -->
+                                <label for="x-range">Time Range (hours):</label>
+                                <input type="number" id="x-range" name="x-range" min="1" max="168" value="1">
+
+                                <!-- Y-Axis Minimum -->
+                                <label for="y-min-range">Temperature Range Minimum (ºC):</label>
+                                <input type="number" id="y-min-range" name="y-min-range" min="0" max="35" value="0">
+
+                                <!-- Y-Axis Maximum -->
+                                <label for="y-max-range">Temperature Range Maximum (ºC):</label>
+                                <input type="number" id="y-max-range" name="y-max-range" min="0" max="35" value="35">
+
+                                <button type="button" id="update-range" class="btn btn-primary">Update Range</button>
+                            </fieldset>
+
+                            <!-- Current Readings -->
+                            <div id="current-readings">
+                                <p>Current Time: <span id="current-time">--:--:--</span></p>
+                                <p>Current Temperature: <span id="current-temp">-- ºC</span></p>
+                            </div>
+
+                            <!-- Message Area -->
+                            <div id="message-area"></div>
+                        </div>
+                    </div>
+
+                    <!-- Right Column -->
+                    <div class="experiment-right">
+                        <!-- Right Container for Graph -->
+                        <div class="right-container">
+                            <!-- Canvas for Chart.js -->
+                            <canvas id="temperature-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sensors Section -->
+            <div id="sensors-section" class="content-section" style="display: none;">
+                <h2>Sensores</h2>
+                <div class="sensors-container">
+                    <!-- Sensor Charts -->
+                    <div class="sensor-chart" id="sensor-1">
+                        <h3>Sensor 1</h3>
+                        <canvas id="sensor-chart-1"></canvas>
+                    </div>
+                    <div class="sensor-chart" id="sensor-2">
+                        <h3>Sensor 2</h3>
+                        <canvas id="sensor-chart-2"></canvas>
+                    </div>
+                    <div class="sensor-chart" id="sensor-3">
+                        <h3>Sensor 3</h3>
+                        <canvas id="sensor-chart-3"></canvas>
+                    </div>
+                    <div class="sensor-chart" id="sensor-4">
+                        <h3>Sensor 4</h3>
+                        <canvas id="sensor-chart-4"></canvas>
+                    </div>
+                    <div class="sensor-chart" id="sensor-5">
+                        <h3>Sensor 5</h3>
+                        <canvas id="sensor-chart-5"></canvas>
+                    </div>
+                    <div class="sensor-chart" id="sensor-6">
+                        <h3>Sensor 6</h3>
+                        <canvas id="sensor-chart-6"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Help Section -->
+            <div id="help-section" class="content-section" style="display: none;">
+                <h2>Ayuda</h2>
+                <div class="help-content">
+                    <!-- Help Content -->
+                    <p>
+                        Bienvenido al experimento de temperatura Tempi. Esta aplicación le permite simular y visualizar cambios de temperatura a lo largo del tiempo.
+                    </p>
+                    <!-- Additional help content can go here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Include the JavaScript file -->
+    <script src="script.js"></script>
+</body>
+</html>
